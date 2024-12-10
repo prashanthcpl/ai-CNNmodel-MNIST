@@ -85,3 +85,16 @@ After training completes:
 - Model weights are saved to `results/mnist_cnn.pth`
 - Test predictions are saved to `results/test_samples.json`
 - Training logs are saved to `results/training_log.json`
+
+<img width="1187" alt="image" src="https://github.com/user-attachments/assets/2e64ccf6-d006-4a60-870f-2da408b452c7">
+
+Epoch 1/10, Loss: 0.1753
+Epoch 2/10, Loss: 0.0482
+Epoch 3/10, Loss: 0.0359
+Epoch 4/10, Loss: 0.0281
+Epoch 5/10, Loss: 0.0236
+Epoch 6/10, Loss: 0.0200
+Epoch 7/10, Loss: 0.0169
+Epoch 8/10, Loss: 0.0159
+Epoch 9/10, Loss: 0.0126
+Epoch 10/10, Loss: 0.0117
