@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MNIST CNN Training Progress</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        #loss-plot, #results {
+            margin-top: 20px;
+        }
+        .sample-image {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MNIST CNN Training Progress</h1>
+        <div id="loss-plot"></div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let losses = [];
+        let batches = [];
+
+        function updatePlot() {
+            fetch('results/training_log.json')
+                .then(response => response.text())
+                .then(text => {
+                    const lines = text.trim().split('\n');
+                    losses = [];
+                    batches = [];
+                    lines.forEach(line => {
+                        const data = JSON.parse(line);
+                        losses.push(data.loss);
+                        batches.push(data.batch + data.epoch * 938); // 938 batches per epoch
+                    });
+
+                    const trace = {
+                        x: batches,
+                        y: losses,
+                        mode: 'lines',
+                        name: 'Training Loss'
+                    };
+
+                    const layout = {
+                        title: 'Training Loss Over Time',
+                        xaxis: { title: 'Batch' },
+                        yaxis: { title: 'Loss' }
+                    };
+
+                    Plotly.newPlot('loss-plot', [trace], layout);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function checkResults() {
+            fetch('results/test_samples.json')
+                .then(response => response.json())
+                .then(samples => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '<h2>Test Results</h2>';
+                    samples.forEach(sample => {
+                        resultsDiv.innerHTML += `
+                            <div class="sample-image">
+                                <p>True: ${sample.true}, Predicted: ${sample.pred}</p>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(() => {});
+        }
+
+        // Update plot every 5 seconds
+        setInterval(updatePlot, 5000);
+        // Check for results every 5 seconds
+        setInterval(checkResults, 5000);
+    </script>
+</body>
+</html> 
